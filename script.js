@@ -1,35 +1,53 @@
-let display = document.getElementById("display");
+const display = document.getElementById("display");
+const buttons = document.querySelectorAll("button");
 
-function appendNumber(number) {
-    if (display.value === "0") {
-        display.value = number;
-    } else {
-        display.value += number;
-    }
+let current = "0";
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const value = btn.dataset.value;
+    const action = btn.dataset.action;
+
+    if (value) handleInput(value);
+    if (action) handleAction(action);
+  });
+});
+
+function handleInput(value) {
+  if (current === "0" && value !== ".") {
+    current = value;
+  } else {
+    current += value;
+  }
+  updateDisplay();
 }
 
-function appendOperator(operator) {
-    const lastChar = display.value.slice(-1);
-    if ("+-*/.".includes(lastChar)) {
-        display.value = display.value.slice(0, -1) + operator; // Substitui o operador repetido
-    } else {
-        display.value += operator;
-    }
+function handleAction(action) {
+  switch (action) {
+    case "clear":
+      current = "0";
+      break;
+
+    case "delete":
+      current = current.length > 1 ? current.slice(0, -1) : "0";
+      break;
+
+    case "calculate":
+      calculate();
+      break;
+  }
+  updateDisplay();
 }
 
-function clearDisplay() {
-    display.value = "";
+function updateDisplay() {
+  display.value = current;
 }
 
-function deleteLast() {
-    display.value = display.value.slice(0, -1);
-}
-
+// ⚠️ substituto simples para eval
 function calculate() {
-    try {
-        const result = eval(display.value);
-        display.value = result;
-    } catch (error) {
-        display.value = "Erro";
-    }
+  try {
+    current = Function(`"use strict"; return (${current})`)().toString();
+  } catch {
+    current = "Erro";
+  }
 }
