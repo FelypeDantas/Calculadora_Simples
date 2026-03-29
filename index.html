@@ -1,41 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Web</title>
+
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="calculator">
-        <div class="display">
-            <input type="text" id="display" readonly value="0" />
-        </div>
-        <div class="buttons">
-            <button data-action="clear">C</button>
-            <button data-action="delete">←</button>
-            <button data-value="/">÷</button>
-            <button data-value="*">×</button>
 
-            <button data-value="7">7</button>
-            <button data-value="8">8</button>
-            <button data-value="9">9</button>
-            <button data-value="-">−</button>
+<main class="app">
+  <section class="calculator" aria-label="Calculadora">
 
-            <button data-value="4">4</button>
-            <button data-value="5">5</button>
-            <button data-value="6">6</button>
-            <button data-value="+">+</button>
-
-            <button data-value="1">1</button>
-            <button data-value="2">2</button>
-            <button data-value="3">3</button>
-            <button data-value=".">.</button>
-
-            <button class="zero" data-value="0">0</button>
-            <button class="equal" data-action="calculate">=</button>
-        </div>
+    <!-- Display -->
+    <div class="display">
+      <input 
+        type="text" 
+        id="display" 
+        value="0" 
+        readonly 
+        aria-label="Visor da calculadora"
+      />
     </div>
-    <script src="script.js"></script>
+
+    <!-- Botões -->
+    <div class="buttons">
+
+      <!-- Ações -->
+      <button data-action="clear" aria-label="Limpar">C</button>
+      <button data-action="delete" aria-label="Apagar último">←</button>
+      <button data-value="/" aria-label="Divisão">÷</button>
+      <button data-value="*" aria-label="Multiplicação">×</button>
+
+      <!-- Números -->
+      <button data-value="7">7</button>
+      <button data-value="8">8</button>
+      <button data-value="9">9</button>
+      <button data-value="-" aria-label="Subtração">−</button>
+
+      <button data-value="4">4</button>
+      <button data-value="5">5</button>
+      <button data-value="6">6</button>
+      <button data-value="+" aria-label="Adição">+</button>
+
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button data-value="." aria-label="Decimal">.</button>
+
+      <!-- Linha final -->
+      <button class="zero" data-value="0">0</button>
+      <button class="equal" data-action="calculate" aria-label="Calcular">=</button>
+
+    </div>
+
+  </section>
+</main>
+
+<!-- Script -->
+<script src="script.js"></script>
+
 </body>
 </html>
