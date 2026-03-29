@@ -1,53 +1,180 @@
 const display = document.getElementById("display");
 const buttons = document.querySelectorAll("button");
 
-let current = "0";
+/* =========================
+   ESTADO
+========================= */
+const state = {
+  current: "0"
+};
 
-buttons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const value = btn.dataset.value;
-    const action = btn.dataset.action;
-
-    if (value) handleInput(value);
-    if (action) handleAction(action);
+/* =========================
+   INIT
+========================= */
+function init() {
+  buttons.forEach(button => {
+    button.addEventListener("click", handleClick);
   });
-});
 
-function handleInput(value) {
-  if (current === "0" && value !== ".") {
-    current = value;
-  } else {
-    current += value;
-  }
+  document.addEventListener("keydown", handleKeyboard);
+
   updateDisplay();
 }
 
-function handleAction(action) {
+init();
+
+/* =========================
+   EVENTOS
+========================= */
+function handleClick(e) {
+  const { value, action } = e.target.dataset;
+
+  if (value) input(value);
+  if (action) actionHandler(action);
+}
+
+function handleKeyboard(e) {
+  if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
+    input(e.key);
+  } else if (e.key === "Enter") {
+    actionHandler("calculate");
+  } else if (e.key === "Backspace") {
+    actionHandler("delete");
+  } else if (e.key === "Escape") {
+    actionHandler("clear");
+  }
+}
+
+/* =========================
+   INPUT
+========================= */
+function input(value) {
+  if (isOperator(value)) {
+    handleOperator(value);
+    return;
+  }
+
+  if (value === ".") {
+    handleDecimal();
+    return;
+  }
+
+  // número
+  if (state.current === "0") {
+    state.current = value;
+  } else {
+    state.current += value;
+  }
+
+  updateDisplay();
+}
+
+/* =========================
+   OPERADORES
+========================= */
+function handleOperator(op) {
+  const last = state.current.slice(-1);
+
+  if (isOperator(last)) {
+    state.current = state.current.slice(0, -1) + op;
+  } else {
+    state.current += op;
+  }
+
+  updateDisplay();
+}
+
+function handleDecimal() {
+  const parts = state.current.split(/[\+\-\*\/]/);
+  const lastNumber = parts[parts.length - 1];
+
+  if (!lastNumber.includes(".")) {
+    state.current += ".";
+  }
+
+  updateDisplay();
+}
+
+/* =========================
+   ACTIONS
+========================= */
+function actionHandler(action) {
   switch (action) {
     case "clear":
-      current = "0";
+      state.current = "0";
       break;
 
     case "delete":
-      current = current.length > 1 ? current.slice(0, -1) : "0";
+      state.current =
+        state.current.length > 1
+          ? state.current.slice(0, -1)
+          : "0";
       break;
 
     case "calculate":
-      calculate();
+      state.current = calculate(state.current);
       break;
   }
+
   updateDisplay();
 }
 
-function updateDisplay() {
-  display.value = current;
+/* =========================
+   CALCULO (SEM EVAL)
+========================= */
+function calculate(expression) {
+  try {
+    const tokens = tokenize(expression);
+    const result = compute(tokens);
+    return result.toString();
+  } catch {
+    return "Erro";
+  }
 }
 
-// ⚠️ substituto simples para eval
-function calculate() {
-  try {
-    current = Function(`"use strict"; return (${current})`)().toString();
-  } catch {
-    current = "Erro";
+/* =========================
+   TOKENIZAÇÃO
+========================= */
+function tokenize(expr) {
+  return expr.match(/(\d+\.?\d*|\+|\-|\*|\/)/g);
+}
+
+/* =========================
+   RESOLUÇÃO
+   (prioridade: * / depois + -)
+========================= */
+function compute(tokens) {
+  let stack = [];
+  let currentOp = "+";
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+
+    if (!isNaN(token)) {
+      const num = parseFloat(token);
+
+      if (currentOp === "+") stack.push(num);
+      if (currentOp === "-") stack.push(-num);
+      if (currentOp === "*") stack.push(stack.pop() * num);
+      if (currentOp === "/") stack.push(stack.pop() / num);
+    } else {
+      currentOp = token;
+    }
   }
+
+  return stack.reduce((acc, val) => acc + val, 0);
+}
+
+/* =========================
+   HELPERS
+========================= */
+function isOperator(char) {
+  return ["+", "-", "*", "/"].includes(char);
+}
+
+/* =========================
+   UI
+========================= */
+function updateDisplay() {
+  display.value = state.current;
 }
