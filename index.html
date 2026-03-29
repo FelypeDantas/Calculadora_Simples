@@ -9,32 +9,31 @@
 <body>
     <div class="calculator">
         <div class="display">
-            <input type="text" id="display" disabled />
+            <input type="text" id="display" readonly value="0" />
         </div>
         <div class="buttons">
-            <!-- Linha 1 -->
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="deleteLast()">←</button>
-            <button onclick="appendOperator('/')">÷</button>
-            <button onclick="appendOperator('*')">×</button>
-            <!-- Linha 2 -->
-            <button onclick="appendNumber(7)">7</button>
-            <button onclick="appendNumber(8)">8</button>
-            <button onclick="appendNumber(9)">9</button>
-            <button onclick="appendOperator('-')">−</button>
-            <!-- Linha 3 -->
-            <button onclick="appendNumber(4)">4</button>
-            <button onclick="appendNumber(5)">5</button>
-            <button onclick="appendNumber(6)">6</button>
-            <button onclick="appendOperator('+')">+</button>
-            <!-- Linha 4 -->
-            <button onclick="appendNumber(1)">1</button>
-            <button onclick="appendNumber(2)">2</button>
-            <button onclick="appendNumber(3)">3</button>
-            <button onclick="appendOperator('.')">.</button>
-            <button class="equal" onclick="calculate()">=</button>
-            <!-- Linha 5 -->
-            <button class="zero" onclick="appendNumber(0)">0</button>
+            <button data-action="clear">C</button>
+            <button data-action="delete">←</button>
+            <button data-value="/">÷</button>
+            <button data-value="*">×</button>
+
+            <button data-value="7">7</button>
+            <button data-value="8">8</button>
+            <button data-value="9">9</button>
+            <button data-value="-">−</button>
+
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button data-value="+">+</button>
+
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button data-value=".">.</button>
+
+            <button class="zero" data-value="0">0</button>
+            <button class="equal" data-action="calculate">=</button>
         </div>
     </div>
     <script src="script.js"></script>
